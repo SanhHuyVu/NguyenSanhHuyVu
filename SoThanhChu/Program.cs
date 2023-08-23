@@ -55,10 +55,12 @@
 
         string TwoDigitNumbers(int number)
         {
-            if (10 < number && number < 20)
+            if (10 <= number && number < 20)
             {
                 switch (number)
                 {
+                    case 10:
+                        return "ten";
                     case 11:
                         return "eleven";
                     case 12:
