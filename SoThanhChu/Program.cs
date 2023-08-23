@@ -3,7 +3,6 @@
     static void Main(string[] args)
     {
         Console.Clear();
-        bool endOfProgram = false;
         int number;
         string letters = "";
 
@@ -51,7 +50,7 @@
                 letters = "Out Of Ability";
             }
 
-        } while (!endOfProgram);
+        } while (true);
 
         string TwoDigitNumbers(int number)
         {
