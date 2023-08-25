@@ -9,7 +9,7 @@ class MangTrongCSharp
             int[,] _2dArray;
             Console.WriteLine("Enter 'stop' to exit");
 
-            Console.Write("Enter the row _2dArray: ");
+            Console.Write("Enter the row _2dArray: as");
             var rowInput = Console.ReadLine();
             if (!int.TryParse(rowInput, out row))
             {
