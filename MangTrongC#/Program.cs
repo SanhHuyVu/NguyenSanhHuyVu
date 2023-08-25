@@ -3,41 +3,47 @@
     static void Main(string[] args)
     {
         int arrayLenght;
-        Console.Write("Enter the length of array: ");
-        var input = Console.ReadLine();
-        if (!int.TryParse(input, out arrayLenght))
+        Console.Clear();
+
+        do
         {
-            if (input == "stop")
+            Console.Write("Type stop to exit");
+            Console.Write("Enter the length of array: ");
+            var input = Console.ReadLine();
+            if (!int.TryParse(input, out arrayLenght))
             {
-                Console.WriteLine("Invalid!");
-                return;
-            }
-        }
-        else
-        {
-            int[] arrayInt = new int[arrayLenght];
-            for (int i = 0; i < arrayInt.Length; i++)
-            {
-                Console.Write($"Enter value at index {i}:");
-                var valueInput = Console.ReadLine();
-                if (!int.TryParse(valueInput, out arrayInt[i]))
+                if (input == "stop")
                 {
-                    Console.WriteLine("Invalid");
-                    i--;
-                    continue;
+                    return;
                 }
             }
-
-            Console.WriteLine("The array is: ");
-            for (int i = 0; i < arrayInt.Length; i++)
+            else
             {
-                Console.Write(arrayInt[i] + " ");
-            }
-            Console.WriteLine("");
+                int[] arrayInt = new int[arrayLenght];
+                for (int i = 0; i < arrayInt.Length; i++)
+                {
+                    Console.Write($"Enter value at index {i}:");
+                    var valueInput = Console.ReadLine();
+                    if (!int.TryParse(valueInput, out arrayInt[i]))
+                    {
+                        Console.WriteLine("Invalid");
+                        i--;
+                        continue;
+                    }
+                }
 
-            Console.WriteLine("The highest value is: " + GetHighestValue(arrayInt));
-            Console.WriteLine("The highest odd value is: " + GetHighestOddValue(arrayInt));
-        }
+                Console.Clear();
+                Console.WriteLine("The array is: ");
+                for (int i = 0; i < arrayInt.Length; i++)
+                {
+                    Console.Write(arrayInt[i] + " ");
+                }
+                Console.WriteLine("");
+
+                Console.WriteLine("The highest value is: " + GetHighestValue(arrayInt));
+                Console.WriteLine("The highest odd value is: " + GetHighestOddValue(arrayInt));
+            }
+        } while (true);
 
         int GetHighestValue(int[] arrayInt)
         {
