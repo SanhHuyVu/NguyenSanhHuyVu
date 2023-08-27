@@ -109,7 +109,7 @@ class MangTrongCSharp
             return highestValue;
         }
         
-        2.Tính tổng các giá trị trên đường chéo chính mảng hai chiều vuông
+        // 2.Tính tổng các giá trị trên đường chéo chính mảng hai chiều vuông
         int SumOfMainDiagonalLine(int[,] _2dArray)
         {
             int diagonalLineLength = (_2dArray.GetLength(0) < _2dArray.GetLength(1)) ? _2dArray.GetLength(0) : _2dArray.GetLength(1);
