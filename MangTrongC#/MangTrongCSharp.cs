@@ -2,6 +2,7 @@ class MangTrongCSharp
 {
     static void Main(string[] args)
     {
+        // 1.Tìm phần tử lớn nhất của mảng hai chiều
         do
         {
             int col;
