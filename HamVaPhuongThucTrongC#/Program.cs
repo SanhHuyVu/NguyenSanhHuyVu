@@ -40,7 +40,7 @@
             {
                 case 0:
                     Console.Clear();
-                    ConvertTemperatureFunction();
+                    ConvertTemperature();
                     break;
                 case 1:
                     Console.Clear();
@@ -61,7 +61,7 @@
             }
         }
 
-        void ConvertTemperatureFunction()
+        void ConvertTemperature()
         {
             int isCToF;
             float tempurature = 10f;
@@ -157,6 +157,7 @@
 
                 int[] intArray = new int[value];
 
+                // inout indexes
                 for (int i = 0; i < intArray.Length; i++)
                 {
                     Console.Write("enter value at index [" + i + "]");
@@ -177,6 +178,7 @@
                     intArray[i] = indexValue;
                 }
 
+                // find min
                 int minValue = int.MaxValue;
                 for (int i = 0; i < intArray.Length; i++)
                 {
@@ -203,7 +205,6 @@
         {
             do
             {
-                // create array
                 // create array
                 Console.WriteLine("Enter 'back' to back");
                 Console.WriteLine("Delete index from array");
@@ -334,9 +335,10 @@
                     return;
                 }
 
+                // input character
                 Console.Write("Enter character to count: ");
                 string characterInput = Console.ReadLine();
-                
+
                 if (!char.TryParse(characterInput, out char character))
                 {
                     if (characterInput == "back")
@@ -352,6 +354,7 @@
                     }
                 }
 
+                // counting
                 Console.Clear();
                 int count = 0;
                 for (int i = 0; i < input.Length; i++)
@@ -361,7 +364,7 @@
                         count++;
                     }
                 }
-                Console.WriteLine($"{characterInput} appeared {count} times in '{input}'");
+                Console.WriteLine($"'{characterInput}' appeared {count} times in '{input}'");
 
             } while (true);
         }
