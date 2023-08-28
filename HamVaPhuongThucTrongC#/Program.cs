@@ -20,6 +20,7 @@
             {
                 if (input == "stop")
                 {
+                    Console.Clear();
                     return;
                 }
                 else
