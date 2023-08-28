@@ -361,7 +361,7 @@
                         count++;
                     }
                 }
-                Console.WriteLine($"{characterInput} appeared {count} times in '{input}'");
+                Console.WriteLine($"'{characterInput}' appeared {count} times in '{input}'");
 
             } while (true);
         }
