@@ -5,10 +5,9 @@ public class StopWatch
     private DateTime endTime;
     private int[] array;
 
-    public StopWatch()
+    public StopWatch(int num)
     {
-        array = Enumerable.Range(1, 100000).ToArray();
-        Random random = new Random();
+        array = Enumerable.Range(1, num).ToArray();
         array = array.OrderBy(x => new Random().Next()).ToArray();
     }
 
@@ -31,7 +30,7 @@ public class StopWatch
 
         Console.WriteLine("Selection sort an array of "+array.Length+" numbers");
         Start();
-        Console.WriteLine("start at: "+startTime.ToString("h:mm:ss:ff"));
+        Console.WriteLine("start at: "+startTime.ToString("h:mm:ss:ff tt"));
         Console.WriteLine("Sorting...");
 
         int temp, smallest;
@@ -52,8 +51,8 @@ public class StopWatch
 
         Console.Clear();
         Console.WriteLine("Selection sort an array of "+array.Length+" numbers");
-        Console.WriteLine("start at: "+startTime.ToString("h:mm:ss:ff"));
+        Console.WriteLine("start at: "+startTime.ToString("h:mm:ss:ff tt"));
         Stop();
-        Console.WriteLine("end at: "+endTime.ToString("h:mm:ss:ff"));
+        Console.WriteLine("end at: "+endTime.ToString("h:mm:ss:ff tt"));
     }
 }

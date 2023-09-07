@@ -45,7 +45,20 @@
                     RunFan();
                     break;
                 case 4:
-                    StopWatch stopWatch = new StopWatch();
+                    int num;
+                    Console.WriteLine("Enter 'back' to return");
+                    Console.Write("Enter array length: ");
+                    var numInput = Console.ReadLine();
+
+                    if (!int.TryParse(numInput, out num))
+                    {
+                        Console.Clear();
+                        if (numInput == "back") return;
+                    }
+
+                    Console.Clear();
+                    
+                    StopWatch stopWatch = new StopWatch(num);
 
                     stopWatch.SelectionSort();
                     stopWatch.GetElapsedTime();
