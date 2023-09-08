@@ -1,4 +1,6 @@
-﻿class Program
+﻿using System.Globalization;
+
+class Program
 {
     static void Main(string[] args)
     {
@@ -45,24 +47,7 @@
                     RunFan();
                     break;
                 case 4:
-                    int num;
-                    Console.WriteLine("Enter 'back' to return");
-                    Console.Write("Enter array length: ");
-                    var numInput = Console.ReadLine();
-
-                    if (!int.TryParse(numInput, out num))
-                    {
-                        Console.Clear();
-                        if (numInput == "back") return;
-                    }
-
-                    Console.Clear();
-                    
-                    StopWatch stopWatch = new StopWatch(num);
-
-                    stopWatch.SelectionSort();
-                    stopWatch.GetElapsedTime();
-
+                    RunStopWatch();
                     break;
             }
         }
@@ -239,6 +224,70 @@
 
                 fan.ToString();
             } while (true);
+        }
+
+        void RunStopWatch()
+        {
+            do
+            {
+                int num;
+                Console.WriteLine("Enter 'back' to return");
+                Console.Write("Enter array length: ");
+                var numInput = Console.ReadLine();
+
+                if (!int.TryParse(numInput, out num))
+                {
+                    Console.Clear();
+                    if (numInput == "back") return;
+                    continue;
+                }
+                else if (num < 1)
+                {
+                    Console.Clear();
+                    continue;
+                }
+
+                Console.Clear();
+
+                StopWatch stopWatch = new StopWatch(num);
+
+                Console.WriteLine("Selection sort an array of " + num + " numbers");
+
+                stopWatch.Start();
+                Console.WriteLine("Start at: " + stopWatch.GetStartTime().ToString("h:mm:ss:ff tt"));
+
+                SelectionSort(num);
+
+                stopWatch.Stop();
+                Console.WriteLine("End at: " + stopWatch.GetEndTime().ToString("h:mm:ss:ff tt"));
+
+                Console.WriteLine("Elapsed time: " + stopWatch.GetElapsedTime().TotalMilliseconds + " milliseconds");
+            } while (true);
+        }
+
+        void SelectionSort(int num)
+        {
+            int[] array = Enumerable.Range(1, num).ToArray();
+            array = array.OrderBy(x => new Random().Next()).ToArray();
+
+            int n = array.Length;
+
+
+            int temp, smallest;
+            for (int i = 0; i < n - 1; i++)
+            {
+                smallest = i;
+                for (int j = i + 1; j < n; j++)
+                {
+                    if (array[j] < array[smallest])
+                    {
+                        smallest = j;
+                    }
+                }
+                temp = array[smallest];
+                array[smallest] = array[i];
+                array[i] = temp;
+            }
         }
     }
 }
