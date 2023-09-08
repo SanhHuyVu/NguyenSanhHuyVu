@@ -47,7 +47,7 @@ class Program
                     RunFan();
                     break;
                 case 4:
-                    RunStopWatch();
+                    RunSelectionSort();
                     break;
             }
         }
@@ -226,7 +226,7 @@ class Program
             } while (true);
         }
 
-        void RunStopWatch()
+        void RunSelectionSort()
         {
             do
             {
