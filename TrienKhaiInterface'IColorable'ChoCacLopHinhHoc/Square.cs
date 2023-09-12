@@ -42,7 +42,7 @@ namespace Shape
               + base.ToString();
     }
 
-    public void HowToColor()
+    public new void HowToColor()
     {
       if (isFilled()) Console.WriteLine($"this quare is filled with {getColor()} all four sides");
       else Console.WriteLine("This Square is not filled with color!");
