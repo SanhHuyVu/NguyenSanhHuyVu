@@ -1,0 +1,31 @@
+static void CopyFileUsingFileInfo(FileInfo source, FileInfo destination, bool overWrite = true)
+    {
+        Console.WriteLine("Copying file with FileInfo...");
+        source.CopyTo(destination.FullName, overWrite);
+        Console.WriteLine("File copied to " + destination);
+    }
+    static void copyFileUsingStream(FileInfo source, FileInfo destination)
+    {
+        Console.WriteLine("Copying file with Stream...");
+        StreamReader reader = null;
+        StreamWriter writer = null;
+
+        try
+        {
+            reader = new StreamReader(source.FullName);
+            writer = new StreamWriter(destination.FullName);
+            char[] buffer = new char[1024];
+            int length;
+            while ((length = reader.Read(buffer)) > 0)
+            {
+                writer.Write(buffer, 0, length);
+            }
+        }
+        finally
+        {
+            reader.Close();
+            reader.Dispose();
+            writer.Close();
+            writer.Dispose();
+        }
+    }
