@@ -2,11 +2,11 @@ public class Item
 {
 
 
-    public string ID { get; set; } = "NAN";
-    public string name { get; set; } = "NAN";
-    public string producer { get; set; } = "NAN";
+    public string ID { get; set; } = "NULL";
+    public string name { get; set; } = "NULL";
+    public string producer { get; set; } = "NULL";
     public double price { get; set; } = 0.0f;
-    public string note { get; set; } = "NAN";
+    public string note { get; set; } = "NULL";
 
     public Item()
     {

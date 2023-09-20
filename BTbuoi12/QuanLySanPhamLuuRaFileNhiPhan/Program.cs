@@ -7,7 +7,7 @@
 
         // Item item = new Item("001", "coca cola", "coca-cola corp", 60000f, "cola drink");
         // Item item2 = new Item("002", "pepsi", "PepsiCo", 55000f, "pepsi drink");
-        // Item item3 = new Item("003", "heniken", "NAN", 45000f, "alcohol");
+        // Item item3 = new Item("003", "heniken", "NULL", 45000f, "alcohol");
 
         // items.Add(item);
         // items.Add(item2);
@@ -58,6 +58,7 @@
                     }
                     break;
                 case 1:
+                    Console.Clear();
                     Console.Write("Enter file path: ");
                     path = Console.ReadLine();
                     var tempList = ReadFile(path);
@@ -70,7 +71,6 @@
                     }
                     items = tempList;
 
-                    Console.Clear();
                     DisplayItems(items);
                     break;
 
@@ -155,22 +155,29 @@
         return tList;
     }
 
-    static void SaveFile(List<Item> items, string path = "ItemDatas")
+    static void SaveFile(List<Item> items, string path = "ItemDatas.txt")
     {
-        BinaryWriter writer = null;
-
+        StreamWriter writer = null;
         try
         {
-            writer = new BinaryWriter(new FileStream(path, FileMode.Create, FileAccess.Write));
+            writer = File.AppendText(path);
 
             foreach (Item item in items)
             {
-                writer.Write(item.ID);
-                writer.Write(item.name);
-                writer.Write(item.producer);
-                writer.Write(item.price);
-                writer.Write(item.note);
+                string dataStr = "";
+                dataStr += item.ID + "|" + item.name + "|" + item.producer + "|" + item.price + "|" + item.note;
+                byte[] str_bytes = System.Text.Encoding.ASCII.GetBytes(dataStr);
+
+                foreach (byte b in str_bytes)
+                {
+                    var data = Convert.ToString(b, 2).PadLeft(8, '0');
+
+                    writer.Write(data + " ");
+                }
+                writer.WriteLine();
             }
+
+            writer.Close();
 
             Console.WriteLine($"File saved att {path}");
         }
@@ -190,27 +197,39 @@
 
     static List<Item> ReadFile(string path)
     {
-
-        BinaryReader reader = null;
-        List<Item> items = new List<Item>(); ;
+        List<Item> items = new List<Item>();
+        StreamReader reader = null;
 
         try
         {
-            reader = new BinaryReader(new FileStream(path, FileMode.Open));
-
-            while (reader.PeekChar() != -1)
+            reader = File.OpenText(path);
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                Item item = new Item();
-                item.GetDataFormBinaryFile(reader);
-                items.Add(item);
-            }
+                string[] result = new string[5];
+                string[] binaryArray = line.Split(' ');
+                int i = 0;
 
+                foreach (string bi in binaryArray)
+                {
+                    if (bi == "" || bi == " ") continue;
+                    int num = Convert.ToInt32(bi, 2);
+                    char character = Convert.ToChar(num);
+                    if (character.Equals('|'))
+                    {
+                        i++;
+                        continue;
+                    }
+
+                    result[i] += character;
+                }
+                items.Add(new Item(result[0], result[1], result[2], double.Parse(result[3]), result[4]));
+            }
             reader.Close();
-            reader.Dispose();
         }
         catch (System.Exception e)
         {
-            // Console.WriteLine(e.StackTrace);
+            Console.WriteLine(e.StackTrace);
             items = null;
             Console.WriteLine("Invalid path!");
         }
