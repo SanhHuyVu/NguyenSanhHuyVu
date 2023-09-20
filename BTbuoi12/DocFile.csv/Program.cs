@@ -14,5 +14,8 @@
             string[] temp = line.Replace("\"", "").Split(",");
             Console.WriteLine(temp[5]);
         }
+
+        reader.Close();
+        reader.Dispose();
     }
 }
