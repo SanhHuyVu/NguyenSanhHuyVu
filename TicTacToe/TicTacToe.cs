@@ -2,12 +2,12 @@ using System.Drawing;
 
 public class TicTacToe
 {
-    public const int GAME_RUNING = 0;
-    public const int GAME_END_WIN = 1;
-    public const int GAME_END_LOSE = 2;
-    public const int GAME_END_DRAW = 3;
+    enum STATE { GAME_RUNNING, GAME_END_WIN, GAME_END_LOSE, GAME_END_DRAW }
 
-    public int gameState { get; private set; }
+    int numinLineTowin;
+    Tile[] lineToHighLight;
+
+    STATE gameState;
 
     int height = 3;
     int width = 3;
@@ -15,12 +15,15 @@ public class TicTacToe
     Tile[] tileList;
 
     int[] currentCursorPos = new int[2];
-    public TicTacToe(int width, int height)
+    public TicTacToe(int width, int height, int numinLineTowin = 3)
     {
         this.width = width;
         this.height = height;
+        this.numinLineTowin = numinLineTowin;
 
-        gameState = 0;
+        lineToHighLight = new Tile[numinLineTowin];
+
+        gameState = STATE.GAME_RUNNING;
 
         tileList = new Tile[width * height];
 
@@ -29,23 +32,25 @@ public class TicTacToe
 
         CreateTable();
     }
-    void Update()
+    void CheckGameState()
     {
         switch (gameState)
         {
-            case GAME_END_WIN:
+            case STATE.GAME_END_WIN:
+                HighLightLine(lineToHighLight);
                 Console.SetCursorPosition(0, height);
                 Console.WriteLine("PLAYER WIN!");
                 WriteSave(gameState);
                 Environment.Exit(0);
                 break;
-            case GAME_END_LOSE:
+            case STATE.GAME_END_LOSE:
+                HighLightLine(lineToHighLight);
                 Console.SetCursorPosition(0, height);
                 Console.WriteLine("PLAYER LOSE!");
                 WriteSave(gameState);
                 Environment.Exit(0);
                 break;
-            case GAME_END_DRAW:
+            case STATE.GAME_END_DRAW:
                 Console.SetCursorPosition(0, height);
                 Console.WriteLine("GAME DRAW!");
                 WriteSave(gameState);
@@ -78,18 +83,18 @@ public class TicTacToe
             }
         }
 
-        Update();
+        CheckGameState();
     }
     void DrawTableTile(int x, int y)
     {
-        Tile tile = Array.Find<Tile>(tileList, t => t.x == x && t.y == y);
+        Tile tile = Array.Find(tileList, t => t.x == x && t.y == y);
         if (currentCursorPos[0] != x || currentCursorPos[1] != y)
         {
-            if (tile?.occupiedBy == Tile.OccupiedBy.X)
+            if (tile?.tileType == Tile.TILETYPE.X)
             {
                 DrawTile(x, y, ConsoleColor.Yellow, 'X');
             }
-            else if (tile?.occupiedBy == Tile.OccupiedBy.O)
+            else if (tile?.tileType == Tile.TILETYPE.O)
             {
                 DrawTile(x, y, ConsoleColor.Yellow, 'O');
             }
@@ -100,17 +105,17 @@ public class TicTacToe
         }
         else if (currentCursorPos[0] == x && currentCursorPos[1] == y)
         {
-            if (tile?.occupiedBy == Tile.OccupiedBy.X)
+            if (tile?.tileType == Tile.TILETYPE.X)
             {
                 DrawTile(x, y, ConsoleColor.Red, 'X');
             }
-            else if (tile?.occupiedBy == Tile.OccupiedBy.O)
+            else if (tile?.tileType == Tile.TILETYPE.O)
             {
                 DrawTile(x, y, ConsoleColor.Red, 'O');
             }
             else
             {
-                DrawTile(x, y, ConsoleColor.Green, ' ');
+                DrawTile(x, y, ConsoleColor.Blue, ' ');
             }
         }
     }
@@ -155,15 +160,15 @@ public class TicTacToe
     }
     public void SetTile()
     {
-        Tile tile = Array.Find<Tile>(tileList, t => t.x == currentCursorPos[0] && t.y == currentCursorPos[1]);
+        Tile tile = Array.Find(tileList, t => t.x == currentCursorPos[0] && t.y == currentCursorPos[1]);
 
-        if (tile == null || tile.occupiedBy != Tile.OccupiedBy.N) return;
+        if (tile == null || tile.tileType != Tile.TILETYPE.N) return;
 
-        tile.occupiedBy = Tile.OccupiedBy.X;
+        tile.tileType = Tile.TILETYPE.X;
 
-        gameState = CheckGameState(tile);
+        gameState = UpdateGameState(tile);
 
-        if (gameState == GAME_RUNING) BotSetTile();
+        if (gameState == STATE.GAME_RUNNING) BotSetTile();
     }
     void BotSetTile()
     {
@@ -171,7 +176,7 @@ public class TicTacToe
 
         foreach (Tile t in tileList)
         {
-            if (t.occupiedBy == Tile.OccupiedBy.N) tmpTileList.Add(t);
+            if (t.tileType == Tile.TILETYPE.N) tmpTileList.Add(t);
         }
 
         if (tmpTileList.Count < 1) return;
@@ -181,49 +186,70 @@ public class TicTacToe
 
         Tile tile = tmpTileList[r];
 
-        tile.occupiedBy = Tile.OccupiedBy.O;
-        gameState = CheckGameState(tile);
+        tile.tileType = Tile.TILETYPE.O;
+        gameState = UpdateGameState(tile);
     }
-    int CheckGameState(Tile tile)
+    STATE UpdateGameState(Tile tile)
     {
-        if (CheckHorizontalLine(tile) && tile.occupiedBy == Tile.OccupiedBy.X) return GAME_END_WIN;
-        if (CheckHorizontalLine(tile) && tile.occupiedBy == Tile.OccupiedBy.O) return GAME_END_LOSE;
+        if (CheckHorizontalLine(tile) && tile.tileType == Tile.TILETYPE.X) return STATE.GAME_END_WIN;
+        if (CheckHorizontalLine(tile) && tile.tileType == Tile.TILETYPE.O) return STATE.GAME_END_LOSE;
 
-        if (CheckVerticalLine(tile) && tile.occupiedBy == Tile.OccupiedBy.X) return GAME_END_WIN;
-        if (CheckVerticalLine(tile) && tile.occupiedBy == Tile.OccupiedBy.O) return GAME_END_LOSE;
+        if (CheckVerticalLine(tile) && tile.tileType == Tile.TILETYPE.X) return STATE.GAME_END_WIN;
+        if (CheckVerticalLine(tile) && tile.tileType == Tile.TILETYPE.O) return STATE.GAME_END_LOSE;
 
-        if (CheckDiagonalLeftToRight(tile) && tile.occupiedBy == Tile.OccupiedBy.X) return GAME_END_WIN;
-        if (CheckDiagonalLeftToRight(tile) && tile.occupiedBy == Tile.OccupiedBy.O) return GAME_END_LOSE;
+        if (CheckDiagonalLeftToRight(tile) && tile.tileType == Tile.TILETYPE.X) return STATE.GAME_END_WIN;
+        if (CheckDiagonalLeftToRight(tile) && tile.tileType == Tile.TILETYPE.O) return STATE.GAME_END_LOSE;
 
-        if (CheckDiagonalRightToLeft(tile) && tile.occupiedBy == Tile.OccupiedBy.X) return GAME_END_WIN;
-        if (CheckDiagonalRightToLeft(tile) && tile.occupiedBy == Tile.OccupiedBy.O) return GAME_END_LOSE;
+        if (CheckDiagonalRightToLeft(tile) && tile.tileType == Tile.TILETYPE.X) return STATE.GAME_END_WIN;
+        if (CheckDiagonalRightToLeft(tile) && tile.tileType == Tile.TILETYPE.O) return STATE.GAME_END_LOSE;
 
-        if (CheckDraw()) return GAME_END_DRAW;
+        if (CheckDraw()) return STATE.GAME_END_DRAW;
 
-        return GAME_RUNING;
+        return STATE.GAME_RUNNING;
     }
+
+    void HighLightLine(Tile[] line)
+    {
+        foreach (Tile tile in line)
+        {
+            char c = ' ';
+            if (tile.tileType == Tile.TILETYPE.X) c = 'X';
+            else if (tile.tileType == Tile.TILETYPE.O) c = 'O';
+            DrawTile(tile.x, tile.y, ConsoleColor.Green, c);
+        }
+    }
+
     bool CheckHorizontalLine(Tile tile)
     {
         int count = 0;
 
+        Tile[] line = new Tile[numinLineTowin];
+        int tileInLine = 0;
+
         for (int i = tile.x; i < width; i++)
         {
-            Tile nextTile = Array.Find<Tile>(tileList, t => t.x == i && t.y == tile.y);
-            if (tile.occupiedBy == nextTile.occupiedBy)
+            Tile nextTile = Array.Find(tileList, t => t.x == i && t.y == tile.y);
+            if (tile.tileType == nextTile.tileType)
             {
+                line[tileInLine] = nextTile;
+                tileInLine++;
+
                 count++;
                 continue;
             }
             break;
         }
 
-        if (count < 3)
+        if (count < numinLineTowin)
         {
             for (int j = tile.x - 1; j >= 0; j--)
             {
-                Tile previousTile = Array.Find<Tile>(tileList, t => t.x == j && t.y == tile.y);
-                if (tile.occupiedBy == previousTile.occupiedBy)
+                Tile previousTile = Array.Find(tileList, t => t.x == j && t.y == tile.y);
+                if (tile.tileType == previousTile.tileType)
                 {
+                    line[tileInLine] = previousTile;
+                    tileInLine++;
+
                     count++;
                     continue;
                 }
@@ -231,8 +257,10 @@ public class TicTacToe
             }
         }
 
-        if (count >= 3)
+        if (count >= numinLineTowin)
         {
+            lineToHighLight = line;
+
             return true;
         }
         return false;
@@ -241,24 +269,33 @@ public class TicTacToe
     {
         int count = 0;
 
+        Tile[] line = new Tile[numinLineTowin];
+        int tileInLine = 0;
+
         for (int i = tile.y; i < height; i++)
         {
-            Tile nextTile = Array.Find<Tile>(tileList, t => t.x == tile.x && t.y == i);
-            if (tile.occupiedBy == nextTile.occupiedBy)
+            Tile nextTile = Array.Find(tileList, t => t.x == tile.x && t.y == i);
+            if (tile.tileType == nextTile?.tileType)
             {
+                line[tileInLine] = nextTile;
+                tileInLine++;
+
                 count++;
                 continue;
             }
             break;
         }
 
-        if (count < 3)
+        if (count < numinLineTowin)
         {
             for (int j = tile.y - 1; j >= 0; j--)
             {
-                Tile previousTile = Array.Find<Tile>(tileList, t => t.x == tile.x && t.y == j);
-                if (tile.occupiedBy == previousTile.occupiedBy)
+                Tile previousTile = Array.Find(tileList, t => t.x == tile.x && t.y == j);
+                if (tile.tileType == previousTile.tileType)
                 {
+                    line[tileInLine] = previousTile;
+                    tileInLine++;
+
                     count++;
                     continue;
                 }
@@ -266,8 +303,10 @@ public class TicTacToe
             }
         }
 
-        if (count >= 3)
+        if (count >= numinLineTowin)
         {
+            lineToHighLight = line;
+
             return true;
         }
         return false;
@@ -276,24 +315,33 @@ public class TicTacToe
     {
         int count = 0;
 
+        Tile[] line = new Tile[numinLineTowin];
+        int tileInLine = 0;
+
         for (int i = tile.x, j = tile.y; i < width && j < height; i++, j++)
         {
-            Tile nextTile = Array.Find<Tile>(tileList, t => t.x == i && t.y == j);
-            if (tile.occupiedBy == nextTile.occupiedBy)
+            Tile nextTile = Array.Find(tileList, t => t.x == i && t.y == j);
+            if (tile.tileType == nextTile.tileType)
             {
+                line[tileInLine] = nextTile;
+                tileInLine++;
+
                 count++;
                 continue;
             }
             break;
         }
 
-        if (count < 3)
+        if (count < numinLineTowin)
         {
             for (int i = tile.x - 1, j = tile.y - 1; i >= 0 && j >= 0; i--, j--)
             {
-                Tile previousTile = Array.Find<Tile>(tileList, t => t.x == i && t.y == j);
-                if (tile.occupiedBy == previousTile.occupiedBy)
+                Tile previousTile = Array.Find(tileList, t => t.x == i && t.y == j);
+                if (tile.tileType == previousTile.tileType)
                 {
+                    line[tileInLine] = previousTile;
+                    tileInLine++;
+
                     count++;
                     continue;
                 }
@@ -301,8 +349,10 @@ public class TicTacToe
             }
         }
 
-        if (count >= 3)
+        if (count >= numinLineTowin)
         {
+            lineToHighLight = line;
+
             return true;
         }
         return false;
@@ -311,24 +361,33 @@ public class TicTacToe
     {
         int count = 0;
 
+        Tile[] line = new Tile[numinLineTowin];
+        int tileInLine = 0;
+
         for (int i = tile.x + 1, j = tile.y - 1; i < width && j >= 0; i++, j--)
         {
-            Tile nextTile = Array.Find<Tile>(tileList, t => t.x == i && t.y == j);
-            if (tile.occupiedBy == nextTile.occupiedBy)
+            Tile nextTile = Array.Find(tileList, t => t.x == i && t.y == j);
+            if (tile.tileType == nextTile.tileType)
             {
+                line[tileInLine] = nextTile;
+                tileInLine++;
+
                 count++;
                 continue;
             }
             break;
         }
 
-        if (count < 3)
+        if (count < numinLineTowin)
         {
             for (int i = tile.x, j = tile.y; i >= 0 && j < height; i--, j++)
             {
-                Tile previousTile = Array.Find<Tile>(tileList, t => t.x == i && t.y == j);
-                if (tile.occupiedBy == previousTile.occupiedBy)
+                Tile previousTile = Array.Find(tileList, t => t.x == i && t.y == j);
+                if (tile.tileType == previousTile.tileType)
                 {
+                    line[tileInLine] = previousTile;
+                    tileInLine++;
+
                     count++;
                     continue;
                 }
@@ -336,8 +395,10 @@ public class TicTacToe
             }
         }
 
-        if (count >= 3)
+        if (count >= numinLineTowin)
         {
+            lineToHighLight = line;
+
             return true;
         }
         return false;
@@ -346,12 +407,12 @@ public class TicTacToe
     {
         foreach (Tile tile in tileList)
         {
-            if (tile.occupiedBy == Tile.OccupiedBy.N) return false;
+            if (tile.tileType == Tile.TILETYPE.N) return false;
         }
 
         return true;
     }
-    void WriteSave(int result)
+    void WriteSave(STATE result)
     {
         string path = "save.txt";
         FileInfo info = new FileInfo(path);
@@ -380,9 +441,9 @@ public class TicTacToe
 
             writer = new StreamWriter(path);
 
-            writer.WriteLine($"WIN: {(result == GAME_END_WIN ? score[0] + 1 : score[0])}");
-            writer.WriteLine($"LOST: {(result == GAME_END_LOSE ? score[1] + 1 : score[1])}");
-            writer.Write($"DRAW: {(result == GAME_END_DRAW ? score[2] + 1 : score[2])}");
+            writer.WriteLine($"WIN: {(result == STATE.GAME_END_WIN ? score[0] + 1 : score[0])}");
+            writer.WriteLine($"LOST: {(result == STATE.GAME_END_LOSE ? score[1] + 1 : score[1])}");
+            writer.Write($"DRAW: {(result == STATE.GAME_END_DRAW ? score[2] + 1 : score[2])}");
 
             writer.Close();
 

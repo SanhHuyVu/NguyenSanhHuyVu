@@ -2,7 +2,7 @@
 {
     static void Main(string[] args)
     {
-        TicTacToe ticTacToe = new TicTacToe(5, 4);
+        TicTacToe ticTacToe = new TicTacToe(3, 3);
 
         do
         {

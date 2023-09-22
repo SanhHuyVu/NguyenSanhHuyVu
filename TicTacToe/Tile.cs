@@ -1,10 +1,10 @@
 public class Tile
 {
-    public enum OccupiedBy { N, X, O }
+    public enum TILETYPE { N, X, O }
     public int x { get; set; } = 0;
     public int y { get; set; } = 0;
 
-    public OccupiedBy occupiedBy { get; set; } = OccupiedBy.N;
+    public TILETYPE tileType { get; set; } = TILETYPE.N;
 
     public Tile()
     {
