@@ -90,11 +90,11 @@ public class TicTacToe
         Tile tile = Array.Find(tileArray, t => t.x == x && t.y == y);
         if (currentCursorPos[0] != x || currentCursorPos[1] != y)
         {
-            if (tile?.tileType == Tile.TILETYPE.X)
+            if (tile.tileType == Tile.TILETYPE.X)
             {
                 DrawTile(x, y, ConsoleColor.Yellow, 'X');
             }
-            else if (tile?.tileType == Tile.TILETYPE.O)
+            else if (tile.tileType == Tile.TILETYPE.O)
             {
                 DrawTile(x, y, ConsoleColor.Yellow, 'O');
             }
@@ -105,11 +105,11 @@ public class TicTacToe
         }
         else if (currentCursorPos[0] == x && currentCursorPos[1] == y)
         {
-            if (tile?.tileType == Tile.TILETYPE.X)
+            if (tile.tileType == Tile.TILETYPE.X)
             {
                 DrawTile(x, y, ConsoleColor.Red, 'X');
             }
-            else if (tile?.tileType == Tile.TILETYPE.O)
+            else if (tile.tileType == Tile.TILETYPE.O)
             {
                 DrawTile(x, y, ConsoleColor.Red, 'O');
             }
@@ -275,7 +275,7 @@ public class TicTacToe
         for (int i = tile.y; i < height; i++)
         {
             Tile nextTile = Array.Find(tileArray, t => t.x == tile.x && t.y == i);
-            if (tile.tileType == nextTile?.tileType)
+            if (tile.tileType == nextTile.tileType)
             {
                 line[tileInLine] = nextTile;
                 tileInLine++;
