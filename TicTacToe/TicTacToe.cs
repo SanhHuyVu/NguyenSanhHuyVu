@@ -437,6 +437,8 @@ public class TicTacToe
                     string[] line = lines[i].Split(":");
                     score[i] = Int32.Parse(line[1]);
                 }
+
+                reader.Dispose();
             }
 
             writer = new StreamWriter(path);
@@ -446,6 +448,7 @@ public class TicTacToe
             writer.Write($"DRAW: {(result == STATE.GAME_END_DRAW ? score[2] + 1 : score[2])}");
 
             writer.Close();
+            writer.Dispose();
 
         }
         catch (IOException e)
