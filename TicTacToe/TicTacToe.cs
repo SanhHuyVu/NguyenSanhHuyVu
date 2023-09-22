@@ -12,7 +12,7 @@ public class TicTacToe
     int height = 3;
     int width = 3;
 
-    Tile[] tileList;
+    Tile[] tileArray;
 
     int[] currentCursorPos = new int[2];
     public TicTacToe(int width, int height, int numinLineTowin = 3)
@@ -25,7 +25,7 @@ public class TicTacToe
 
         gameState = STATE.GAME_RUNNING;
 
-        tileList = new Tile[width * height];
+        tileArray = new Tile[width * height];
 
         currentCursorPos[0] = width / 2; // x
         currentCursorPos[1] = height / 2; // y
@@ -66,7 +66,7 @@ public class TicTacToe
         {
             for (int y = 0; y < height; y++)
             {
-                tileList[index] = new Tile(x, y);
+                tileArray[index] = new Tile(x, y);
                 DrawTableTile(x, y);
                 index++;
             }
@@ -87,7 +87,7 @@ public class TicTacToe
     }
     void DrawTableTile(int x, int y)
     {
-        Tile tile = Array.Find(tileList, t => t.x == x && t.y == y);
+        Tile tile = Array.Find(tileArray, t => t.x == x && t.y == y);
         if (currentCursorPos[0] != x || currentCursorPos[1] != y)
         {
             if (tile?.tileType == Tile.TILETYPE.X)
@@ -160,7 +160,7 @@ public class TicTacToe
     }
     public void SetTile()
     {
-        Tile tile = Array.Find(tileList, t => t.x == currentCursorPos[0] && t.y == currentCursorPos[1]);
+        Tile tile = Array.Find(tileArray, t => t.x == currentCursorPos[0] && t.y == currentCursorPos[1]);
 
         if (tile == null || tile.tileType != Tile.TILETYPE.N) return;
 
@@ -174,7 +174,7 @@ public class TicTacToe
     {
         List<Tile> tmpTileList = new List<Tile>();
 
-        foreach (Tile t in tileList)
+        foreach (Tile t in tileArray)
         {
             if (t.tileType == Tile.TILETYPE.N) tmpTileList.Add(t);
         }
@@ -228,7 +228,7 @@ public class TicTacToe
 
         for (int i = tile.x; i < width; i++)
         {
-            Tile nextTile = Array.Find(tileList, t => t.x == i && t.y == tile.y);
+            Tile nextTile = Array.Find(tileArray, t => t.x == i && t.y == tile.y);
             if (tile.tileType == nextTile.tileType)
             {
                 line[tileInLine] = nextTile;
@@ -244,7 +244,7 @@ public class TicTacToe
         {
             for (int j = tile.x - 1; j >= 0; j--)
             {
-                Tile previousTile = Array.Find(tileList, t => t.x == j && t.y == tile.y);
+                Tile previousTile = Array.Find(tileArray, t => t.x == j && t.y == tile.y);
                 if (tile.tileType == previousTile.tileType)
                 {
                     line[tileInLine] = previousTile;
@@ -274,7 +274,7 @@ public class TicTacToe
 
         for (int i = tile.y; i < height; i++)
         {
-            Tile nextTile = Array.Find(tileList, t => t.x == tile.x && t.y == i);
+            Tile nextTile = Array.Find(tileArray, t => t.x == tile.x && t.y == i);
             if (tile.tileType == nextTile?.tileType)
             {
                 line[tileInLine] = nextTile;
@@ -290,7 +290,7 @@ public class TicTacToe
         {
             for (int j = tile.y - 1; j >= 0; j--)
             {
-                Tile previousTile = Array.Find(tileList, t => t.x == tile.x && t.y == j);
+                Tile previousTile = Array.Find(tileArray, t => t.x == tile.x && t.y == j);
                 if (tile.tileType == previousTile.tileType)
                 {
                     line[tileInLine] = previousTile;
@@ -320,7 +320,7 @@ public class TicTacToe
 
         for (int i = tile.x, j = tile.y; i < width && j < height; i++, j++)
         {
-            Tile nextTile = Array.Find(tileList, t => t.x == i && t.y == j);
+            Tile nextTile = Array.Find(tileArray, t => t.x == i && t.y == j);
             if (tile.tileType == nextTile.tileType)
             {
                 line[tileInLine] = nextTile;
@@ -336,7 +336,7 @@ public class TicTacToe
         {
             for (int i = tile.x - 1, j = tile.y - 1; i >= 0 && j >= 0; i--, j--)
             {
-                Tile previousTile = Array.Find(tileList, t => t.x == i && t.y == j);
+                Tile previousTile = Array.Find(tileArray, t => t.x == i && t.y == j);
                 if (tile.tileType == previousTile.tileType)
                 {
                     line[tileInLine] = previousTile;
@@ -366,7 +366,7 @@ public class TicTacToe
 
         for (int i = tile.x + 1, j = tile.y - 1; i < width && j >= 0; i++, j--)
         {
-            Tile nextTile = Array.Find(tileList, t => t.x == i && t.y == j);
+            Tile nextTile = Array.Find(tileArray, t => t.x == i && t.y == j);
             if (tile.tileType == nextTile.tileType)
             {
                 line[tileInLine] = nextTile;
@@ -382,7 +382,7 @@ public class TicTacToe
         {
             for (int i = tile.x, j = tile.y; i >= 0 && j < height; i--, j++)
             {
-                Tile previousTile = Array.Find(tileList, t => t.x == i && t.y == j);
+                Tile previousTile = Array.Find(tileArray, t => t.x == i && t.y == j);
                 if (tile.tileType == previousTile.tileType)
                 {
                     line[tileInLine] = previousTile;
@@ -405,7 +405,7 @@ public class TicTacToe
     }
     bool CheckDraw()
     {
-        foreach (Tile tile in tileList)
+        foreach (Tile tile in tileArray)
         {
             if (tile.tileType == Tile.TILETYPE.N) return false;
         }
