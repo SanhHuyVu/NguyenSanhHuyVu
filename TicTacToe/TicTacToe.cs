@@ -2,12 +2,12 @@ using System.Drawing;
 
 public class TicTacToe
 {
-    enum STATE { GAME_RUNNING, GAME_END_WIN, GAME_END_LOSE, GAME_END_DRAW }
+    public enum STATE { GAME_RUNNING, GAME_END_WIN, GAME_END_LOSE, GAME_END_DRAW }
 
     int numinLineTowin;
     Tile[] lineToHighLight;
 
-    STATE gameState;
+    public STATE gameState { get; private set; }
 
     int height = 3;
     int width = 3;
@@ -41,20 +41,17 @@ public class TicTacToe
                 Console.SetCursorPosition(0, height);
                 Console.WriteLine("PLAYER WIN!");
                 WriteSave(gameState);
-                Environment.Exit(0);
                 break;
             case STATE.GAME_END_LOSE:
                 HighLightLine(lineToHighLight);
                 Console.SetCursorPosition(0, height);
                 Console.WriteLine("PLAYER LOSE!");
                 WriteSave(gameState);
-                Environment.Exit(0);
                 break;
             case STATE.GAME_END_DRAW:
                 Console.SetCursorPosition(0, height);
                 Console.WriteLine("GAME DRAW!");
                 WriteSave(gameState);
-                Environment.Exit(0);
                 break;
         }
     }

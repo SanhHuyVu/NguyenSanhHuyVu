@@ -31,6 +31,6 @@
                     ticTacToe.DrawTable();
                     break;
             }
-        } while (true);
+        } while (ticTacToe.gameState == TicTacToe.STATE.GAME_RUNNING);
     }
 }
