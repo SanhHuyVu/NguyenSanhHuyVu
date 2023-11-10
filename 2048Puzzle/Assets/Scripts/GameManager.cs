@@ -8,6 +8,7 @@ using UnityEngine;
 using TMPro;
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine.SceneManagement;
 
 public enum GameState { GenerateLevel, SpawningBlocks, WaitingInput, Moving, Win, Lose }
 
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     private List<Tile> tileList;
     private List<Block> blockList;
+    private SpriteRenderer board;
     private GameState state;
     private int move;
 
@@ -86,7 +88,7 @@ public class GameManager : MonoBehaviour
         blockList = new List<Block>();
 
         var center = new Vector2(size / 2f - 0.5f, size / 2f - 0.5f);
-        var board = Instantiate(boardPrefab, center, quaternion.identity);
+        board = Instantiate(boardPrefab, center, quaternion.identity);
         board.size = new Vector2(size, size);
 
         Camera.main.transform.position = new Vector3(center.x, center.y, Camera.main.transform.position.z);
@@ -227,11 +229,18 @@ public class GameManager : MonoBehaviour
 
     public void OnRestartBtnClicked()
     {
+        Destroy(board.gameObject);
+
         Block[] tempBlockArray = blockList.ToArray();
         foreach (Block block in tempBlockArray)
         {
             RemoveBlock(block);
         }
+        foreach (Tile tile in tileList)
+        {
+            Destroy(tile.gameObject);
+        }
+        if (loseScreen.activeSelf) loseScreen.SetActive(false);
         GenerateGrid();
     }
     public void OnIncreaseBtnclicked()
